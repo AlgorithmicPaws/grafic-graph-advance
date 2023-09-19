@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Graphic Graph</title>
+    <script type="text/javascript"
+    src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.8/css/line.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<script src="script.js"></script>
+
+<body onload="init();">
+  <header>
+    <h1>Graphic Graph</h1>
+  </header>
+  
+    <main>
+      <div id="mynetwork"></div>
+    </main>
+
+    <div id="network-popUp" class="popup">
+      <span id="operation">node</span> <br />
+      <form>
+        <fieldset>
+          <legend>Node Information</legend>
+          <div class="form-group">
+            <label for="node-id">Id:</label>
+            <input type="text" id="node-id" placeholder="Enter ID" value="" />
+          </div>
+
+          <div class="form-group">
+            <label for="node-label">Name:</label>
+            <input type="text" id="node-label" placeholder="Enter Name" value="" />
+          </div>
+
+          <div class="form-group">
+            <label for="node-prerequisite">Prerequisite:</label>
+            <input type="text" id="node-prerequisite" placeholder="Enter Nodes" value="" />
+          </div>
+
+          <div class="form-group">
+            <label for="node-title">Task Time:</label>
+            <input type="text" id="node-title" placeholder="Enter Time" value="" />
+          </div>
+        </fieldset>
+      </form>
+      <div class="button-container">
+        <button class="button" id="saveButton">Save</button>
+        <button class="button" id="cancelButton">Cancel</button>
+      </div>
+    </div>  
+
+    <div id="edge-popUp" class="popup">
+      <span id="edge-operation">node</span> <br />
+      <form>
+          <fieldset>
+              <legend>Edge Information</legend>
+              <label for="edge-label">Cost:</label>
+              <input type="text" id="edge-label" placeholder="Enter Cost" value="" />
+          </fieldset>
+      </form>
+      <div class="button-container">
+        <p>Choose edge type:</p>
+        <button class="button" id="edge-saveButtonBi">Bidirectional</button>
+        <button class="button" id="edge-saveButtonUni">Unidirectional</button>
+        <br/>
+        <button class="button" id="edge-cancelButton">Cancel</button>
+      </div>
+    </div> 
+</body>
+</html>
+ 

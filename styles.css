@@ -1,0 +1,132 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+
+:root {
+
+    /* HSL color mode */
+    --first-color: hsl(250, 69%, 61%);
+    --first-color-second: hsl(250, 30%, 8%);
+    --first-color-alt: hsl(250, 57%, 53%);
+    --first-color-lighter: hsl(250, 92%, 85%);
+    --title-color: hsl(250, 8%, 95%);
+    --text-color: hsl(250, 8%, 75%);
+    --text-color-light: hsl(250, 8%, 65%);
+    --input-color: hsl(250, 29%, 16%);
+    --body-color: hsl(250, 60%, 99%);
+    --container-color: hsl(250, 29%, 16%);
+    --scroll-bar-color: hsl(250, 12%, 90%);
+    --scroll-thumb-color: hsl(250, 12%, 80%);
+
+    /* .25rem = 4px, .5rem = 8px, .75rem = 12px ... */
+    --mb-0-25: .25rem;
+    --mb-0-5: .5rem;
+    --mb-0-75: .75rem;
+    --mb-1: 1rem;
+    --mb-1-5: 1.5rem;
+    --mb-2: 2rem;
+    --mb-2-5: 2.5rem;
+    --mb-3: 3rem;
+}
+
+html {
+    scroll-behavior: smooth;
+  }
+  
+body {
+    font-family:'Poppins', sans-serif;
+    font-size: var(--normal-font-size);
+    background-color: hsl(250, 30%, 8%);
+    color: var(--text-color);
+  }
+  
+h1, h2, h3, h4 {
+  color: hsl(250, 8%, 95%);
+  font-weight: 600;
+}
+header{
+  text-align: center;
+  font-size: 1.5rem;
+}
+input{
+    font-family: 'Poppins', sans-serif;
+    border-radius: 10px;
+    background-color: rgba(25, 12, 41, .05);
+    color: #ffff;   
+    height: 25px;
+    border-width: 0.01px;
+}
+form{
+  margin: 1rem;
+}
+.form-group {
+  display: flex; 
+  align-items: center; 
+  margin-bottom: .5rem; 
+}
+
+
+.form-group label {
+  flex: 1; 
+  margin-right: .5rem; 
+}
+.form-group input {
+  flex: 2;
+}
+.button{
+    display: inline-block;
+    border-radius: 0.5rem;
+    background-color: hsl(250, 57%, 53%);
+    color: #ffff;
+    padding: 0.5rem;
+    padding-top: 0.35rem;
+    text-align: center;
+    border-width: 0px;
+    font-weight:500;
+    margin-bottom: .5rem;
+
+}       
+.button:hover{
+    background-color: #ffff;
+    color: hsl(250, 57%, 53%);
+}
+#edgeCancel{
+    margin: 1rem;
+}
+#mynetwork {
+    width: 1000px;
+    height: 800px;
+    margin: 0 auto;   
+    box-shadow: 0 0 3rem 0 rgba(254,1,154, .3); 
+    border-radius: 5px;
+    background-color: rgba(255, 255, 255, .05);
+    backdrop-filter: blur(5px);
+}
+#network-popUp {
+    display: none;
+    position: absolute;
+    right: 1%  ; /* Position it on the left side */
+    top: 50%; /* Adjust the vertical position as needed */
+    transform: translateY(-50%); /* Center it vertically */
+    color: #5fa7fa; /* Your desired color here */
+    background-color: rgba(33, 29, 53, .5);
+    border-radius: 8px;
+    padding: 10px;
+    text-align: center;
+  }
+  #operation{
+    font-size: 20px;
+    font-weight: bold;
+    }
+  #edge-popUp {
+    display: none;
+    position: absolute;
+    right: 1%  ; /* Position it on the left side */
+    top: 50%; /* Adjust the vertical position as needed */
+    transform: translateY(-50%); /* Center it vertically */
+    color: #5fa7fa; /* Your desired color here */
+    background-color: rgba(33, 29, 53, .5);
+    border-radius: 8px;
+    padding: 10px;
+    text-align: center;
+  }
+
+
