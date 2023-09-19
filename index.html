@@ -9,66 +9,133 @@
     <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.8/css/line.css">
     <link rel="stylesheet" href="styles.css">
 </head>
-<script src="script.js"></script>
-
-<body onload="init();">
+<body>
   <header>
     <h1>Graphic Graph</h1>
   </header>
-  
-    <main>
-      <div id="mynetwork"></div>
-    </main>
+  <table>
+    <tbody>
+      <tr>
+        <td>
+          <h2>Node</h2>
+          <table>
+            <tbody>
+              <tr>
+                <td></td>
+                <td><label for="node-id">Id</label></td>
+                <td><input id="node-id" type="text" value="6" /></td>
+              </tr>
+              <tr>
+                <td></td>
+                <td><label for="node-label">Label</label></td>
+                <td><input id="node-label" type="text" value="Node 6" /></td>
+              </tr>
+              <tr>
+                <td></td>
+                <td>Action</td>
+                <td>
+                  <button id="node-add" onclick="addNode();">Add</button>
+                  <button id="node-update" onclick="updateNode();">Update</button>
+                  <button id="node-remove" onclick="removeNode();">Remove</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </td>
+        <td>
+          <h2>Edge</h2>
+          <table>
+            <tbody>
+              <tr>
+                <td></td>
+                <td><label for="edge-id">Id</label></td>
+                <td><input id="edge-id" type="text" value="5" /></td>
+              </tr>
+              <tr>
+                <td></td>
+                <td><label for="edge-from">From</label></td>
+                <td><input id="edge-from" type="text" value="3" /></td>
+              </tr>
+              <tr>
+                <td></td>
+                <td><label for="edge-to">To</label></td>
+                <td><input id="edge-to" type="text" value="4" /></td>
+              </tr>
+              <tr>
+                <td></td>
+                <td>Action</td>
+                <td>
+                  <button id="edge-add" onclick="addEdge();">Add</button>
+                  <button id="edge-update" onclick="updateEdge();">Update</button>
+                  <button id="edge-remove" onclick="removeEdge();">Remove</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div id="network-popUp" class="popup">
+    <span id="operation">node</span> 
+    <br />
+    <form>
+      <fieldset>
+        <legend>Node Information</legend>
+        <div class="form-group">
+          <label for="node-id">Id:</label>
+          <input type="text" id="node-id" placeholder="Enter ID" value="" />
+        </div>
 
-    <div id="network-popUp" class="popup">
-      <span id="operation">node</span> <br />
-      <form>
+        <div class="form-group">
+          <label for="node-label">Name:</label>
+          <input type="text" id="node-label" placeholder="Enter Name" value="" />
+        </div>
+
+        <div class="form-group">
+          <label for="node-prerequisite">Prerequisite:</label>
+          <input type="text" id="node-prerequisite" placeholder="Enter Nodes" value="" />
+        </div>
+
+        <div class="form-group">
+          <label for="node-title">Task Time:</label>
+          <input type="text" id="node-title" placeholder="Enter Time" value="" />
+        </div>
+      </fieldset>
+    </form>
+    <div class="button-container">
+      <button class="button" id="node-add" onclick="addNode();">Add</button>
+      <button class="button" id="node-update" onclick="updateNode();">Update</button>
+      <button class="button" id="node-remove" onclick="removeNode();">Remove</button>
+    </div>
+  </div> 
+  <div id="edge-popUp" class="popup">
+    <span id="edge-operation">node</span> <br />
+    <form>
         <fieldset>
-          <legend>Node Information</legend>
-          <div class="form-group">
-            <label for="node-id">Id:</label>
-            <input type="text" id="node-id" placeholder="Enter ID" value="" />
-          </div>
-
-          <div class="form-group">
-            <label for="node-label">Name:</label>
-            <input type="text" id="node-label" placeholder="Enter Name" value="" />
-          </div>
-
-          <div class="form-group">
-            <label for="node-prerequisite">Prerequisite:</label>
-            <input type="text" id="node-prerequisite" placeholder="Enter Nodes" value="" />
-          </div>
-
-          <div class="form-group">
-            <label for="node-title">Task Time:</label>
-            <input type="text" id="node-title" placeholder="Enter Time" value="" />
-          </div>
+            <legend>Edge Information</legend>
+            <label for="edge-label">Cost:</label>
+            <input type="text" id="edge-label" placeholder="Enter Cost" value="" />
         </fieldset>
-      </form>
-      <div class="button-container">
-        <button class="button" id="saveButton">Save</button>
-        <button class="button" id="cancelButton">Cancel</button>
-      </div>
-    </div>  
+    </form>
 
-    <div id="edge-popUp" class="popup">
-      <span id="edge-operation">node</span> <br />
-      <form>
-          <fieldset>
-              <legend>Edge Information</legend>
-              <label for="edge-label">Cost:</label>
-              <input type="text" id="edge-label" placeholder="Enter Cost" value="" />
-          </fieldset>
-      </form>
-      <div class="button-container">
-        <p>Choose edge type:</p>
-        <button class="button" id="edge-saveButtonBi">Bidirectional</button>
-        <button class="button" id="edge-saveButtonUni">Unidirectional</button>
-        <br/>
-        <button class="button" id="edge-cancelButton">Cancel</button>
-      </div>
-    </div> 
+    <div class="button-container">
+      <p>Choose edge type:</p>
+      <button class="button" id="edge-saveButtonBi">Bidirectional</button>
+      <button class="button" id="edge-saveButtonUni">Unidirectional</button>
+      <br/>
+      <button class="button" id="edge-cancelButton">Cancel</button>
+    </div>
+  </div>  
+  <h1>View</h1>
+  <div class="button-container">
+    <p>Edit menu:</p>
+    <button class="button" id="editModeNode" onclick="displayNode();">Node</button>
+    <button class="button" id="editModeEdge" onclick="displayEdge();">Edge</button>
+  <div id="mynetwork"></div>
+  <div><pre id="nodes"></pre></div>
+  <div><pre id="edges"></pre></div> 
+  <script src="script.js"></script>
 </body>
 </html>
  
