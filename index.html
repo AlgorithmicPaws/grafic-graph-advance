@@ -13,11 +13,6 @@
   <header>
     <h1>Graphic Graph</h1>
   </header>
-  <table>
-    <tbody>
-      <tr>
-        <td>
-          <h2>Node</h2>
           <table>
             <tbody>
               <tr>
@@ -31,54 +26,12 @@
                 <td><input id="node-label" type="text" value="Node 6" /></td>
               </tr>
               <tr>
-                <td></td>
-                <td>Action</td>
-                <td>
-                  <button id="node-add" onclick="addNode();">Add</button>
-                  <button id="node-update" onclick="updateNode();">Update</button>
-                  <button id="node-remove" onclick="removeNode();">Remove</button>
-                </td>
-              </tr>
-            </tbody>
           </table>
-        </td>
-        <td>
-          <h2>Edge</h2>
-          <table>
-            <tbody>
-              <tr>
-                <td></td>
-                <td><label for="edge-id">Id</label></td>
-                <td><input id="edge-id" type="text" value="5" /></td>
-              </tr>
-              <tr>
-                <td></td>
-                <td><label for="edge-from">From</label></td>
-                <td><input id="edge-from" type="text" value="3" /></td>
-              </tr>
-              <tr>
-                <td></td>
-                <td><label for="edge-to">To</label></td>
-                <td><input id="edge-to" type="text" value="4" /></td>
-              </tr>
-              <tr>
-                <td></td>
-                <td>Action</td>
-                <td>
-                  <button id="edge-add" onclick="addEdge();">Add</button>
-                  <button id="edge-update" onclick="updateEdge();">Update</button>
-                  <button id="edge-remove" onclick="removeEdge();">Remove</button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-  <div id="network-popUp" class="popup">
-    <span id="operation">node</span> 
+
+
+  <div id="edit-popUp" class="popup">
     <br />
+    <span id="operation">Node</span> 
     <form>
       <fieldset>
         <legend>Node Information</legend>
@@ -108,30 +61,52 @@
       <button class="button" id="node-update" onclick="updateNode();">Update</button>
       <button class="button" id="node-remove" onclick="removeNode();">Remove</button>
     </div>
-  </div> 
-  <div id="edge-popUp" class="popup">
-    <span id="edge-operation">node</span> <br />
-    <form>
-        <fieldset>
-            <legend>Edge Information</legend>
-            <label for="edge-label">Cost:</label>
-            <input type="text" id="edge-label" placeholder="Enter Cost" value="" />
-        </fieldset>
-    </form>
+    <div>
+      <br />
+      <span id="operation">Edge</span> 
+      <form>
+          <fieldset>
+              <legend>Edge Information</legend>
+              <div class="form-group">
+                <label for="edge-label">Id:</label>
+                <input id="edge-id" type="text" placeholder="Enter ID" value="" />
+              </div>
+              <div class="form-group">
+                <label for="edge-label">From:</label>
+                <input id="edge-from" type="text" placeholder="Enter From" value="" />
+              </div>
+              <div class="form-group">
+                <label for="edge-label">To:</label>
+                <input id="edge-to" type="text"  placeholder="Enter To" value="" />
+              </div>
+              <div class="form-group">
+                <label for="edge-label">Cost:</label>
+                <input id="edge-label" type="text" placeholder="Enter Cost" value="" />  
+              </div>
+              <div class="form-group">
+                <label for="edge-label">Type:</label>
+                <select id="edge-type" name="edge-type">
+                  <option value="bidirectional">Bidirectional</option>
+                  <option value="unidirectional">Unidirectional</option>
+                </select>
+              </div>
 
-    <div class="button-container">
-      <p>Choose edge type:</p>
-      <button class="button" id="edge-saveButtonBi">Bidirectional</button>
-      <button class="button" id="edge-saveButtonUni">Unidirectional</button>
-      <br/>
-      <button class="button" id="edge-cancelButton">Cancel</button>
-    </div>
-  </div>  
-  <h1>View</h1>
+              
+          </fieldset>
+      </form>
+  
+      <div class="button-container">
+        <button class="button" id="edge-add" onclick="addEdge();">Add</button>
+        <button class="button" id="edge-remove" onclick="removeEdge();">Remove</button>
+        <br/>
+        <button class="button" id="edge-cancelButton">Cancel</button>
+      </div>
+    </div>  
+  </div> 
+
   <div class="button-container">
     <p>Edit menu:</p>
-    <button class="button" id="editModeNode" onclick="displayNode();">Node</button>
-    <button class="button" id="editModeEdge" onclick="displayEdge();">Edge</button>
+    <button class="button" id="editMode" onclick="displayEdit();">Node</button>
   <div id="mynetwork"></div>
   <div><pre id="nodes"></pre></div>
   <div><pre id="edges"></pre></div> 

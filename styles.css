@@ -71,6 +71,11 @@ form{
 .form-group input {
   flex: 2;
 }
+.form-group select {
+  flex: 2;
+  margin-right: .5rem; 
+
+}
 .button{
     display: inline-block;
     border-radius: 0.5rem;
@@ -100,7 +105,7 @@ form{
     background-color: rgba(255, 255, 255, .05);
     backdrop-filter: blur(5px);
 }
-#network-popUp {
+#edit-popUp {
     display: none;
     position: absolute;
     right: 1%  ; /* Position it on the left side */
@@ -116,17 +121,3 @@ form{
     font-size: 20px;
     font-weight: bold;
     }
-  #edge-popUp {
-    display: none;
-    position: absolute;
-    right: 1%  ; /* Position it on the left side */
-    top: 50%; /* Adjust the vertical position as needed */
-    transform: translateY(-50%); /* Center it vertically */
-    color: #5fa7fa; /* Your desired color here */
-    background-color: rgba(33, 29, 53, .5);
-    border-radius: 8px;
-    padding: 10px;
-    text-align: center;
-  }
-
-

@@ -69,11 +69,8 @@ function draw() {
 function toJSON(obj) {
   return JSON.stringify(obj, null, 4);
 }
-function displayNode() {
-  document.getElementById("network-popUp").style.display = "block";
-}
-function displayEdge() {
-  document.getElementById("edge-popUp").style.display = "block";
+function displayEdit() {
+  document.getElementById("edit-popUp").style.display = "block";
 }
 function addNode() {
   try {
@@ -104,29 +101,40 @@ function removeNode() {
     alert(err);
   }
 }
-
 function addEdge() {
-  try {
-    edges.add({
-      id: document.getElementById("edge-id").value,
-      from: document.getElementById("edge-from").value,
-      to: document.getElementById("edge-to").value,
-    });
-  } catch (err) {
-    alert(err);
-  }
-}
-function updateEdge() {
-  try {
-    edges.update({
-      id: document.getElementById("edge-id").value,
-      from: document.getElementById("edge-from").value,
-      to: document.getElementById("edge-to").value,
-    });
-  } catch (err) {
-    alert(err);
-  }
-}
+  // Obtén el valor del elemento select con ID "edge-type"
+  var edgeType = document.getElementById("edge-type").value;
+
+    try {
+      if (edgeType === "bidirectional") {
+      edges.add({
+        id: document.getElementById("edge-id").value,
+        from: document.getElementById("edge-from").value,
+        to: document.getElementById("edge-to").value,
+        label: document.getElementById("edge-label").value,
+        arrows: null,
+
+      });
+    }
+    else {
+        edges.add({
+          id: document.getElementById("edge-id").value,
+          from: document.getElementById("edge-from").value,
+          to: document.getElementById("edge-to").value,
+          label: document.getElementById("edge-label").value,
+          arrows: "to",
+        });
+    } }
+    catch (err) {
+      alert(err);
+    }
+    document.getElementById("edge-type").value = "";
+    document.getElementById("edge-id").value = "";
+    document.getElementById("edge-from").value = "";
+    document.getElementById("edge-to").value = "";
+    document.getElementById("edge-lable").value = "";
+  } 
+
 function removeEdge() {
   try {
     edges.remove({ id: document.getElementById("edge-id").value });
