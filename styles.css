@@ -57,6 +57,14 @@ input{
 form{
   margin: 1rem;
 }
+pre {
+  text-align: center; /* Center the text horizontally */
+  display: flex;
+  align-items: center; /* Center the container vertically */
+  justify-content: center; /* Center the container horizontally */
+  height: 100%; /* Make the container fill its parent's height */
+  margin: 0; /* Remove any default margin */
+}
 .form-group {
   display: flex; 
   align-items: center; 
@@ -92,6 +100,60 @@ form{
 .button:hover{
     background-color: #ffff;
     color: hsl(250, 57%, 53%);
+}
+.icon-button {
+  background-color: hsl(250, 57%, 53%);
+  color: #fff;
+  border: none;
+  border-radius: 50%; /* Set to 50% for a circular shape */
+  width: 40px; /* Adjust the width to your desired size */
+  height: 40px; /* Adjust the height to your desired size */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  float: right; 
+  cursor: pointer;
+}
+.icon-button i {
+  font-size: 24px; /* Adjust the font size to make the icon bigger */
+}
+.sidebar {
+  height: 100%;
+  width: 250px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: #333;
+  padding-top: 20px;
+}
+
+/* Sidebar links */
+.sidebar a {
+  padding: 10px 15px;
+  text-decoration: none;
+  font-size: 16px;
+  color: white; 
+  display: block;
+  flex: 1;
+}
+
+.sidebar i{
+  font-size: 18px;
+  color: white; 
+  flex: 2;
+}
+
+.sidebar ul {
+  padding-left: 20px;
+  display: none;
+}
+
+.sidebar ul li {
+  margin-bottom: 5px;
+}
+
+.sidebar a:hover {
+  background-color: #555;
 }
 #edgeCancel{
     margin: 1rem;

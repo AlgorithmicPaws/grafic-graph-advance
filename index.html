@@ -13,24 +13,32 @@
   <header>
     <h1>Graphic Graph</h1>
   </header>
-          <table>
-            <tbody>
-              <tr>
-                <td></td>
-                <td><label for="node-id">Id</label></td>
-                <td><input id="node-id" type="text" value="6" /></td>
-              </tr>
-              <tr>
-                <td></td>
-                <td><label for="node-label">Label</label></td>
-                <td><input id="node-label" type="text" value="Node 6" /></td>
-              </tr>
-              <tr>
-          </table>
+  <section class="sidebar">
+    
+    <a href="#" onclick="toggleSubmenu('submenu1')">File
+      <i class="uil uil-angle-left"></i>
+    </a>
+    <ul id="submenu1">
+        <li><a href="#" onclick="exportToDOT()">Export Graph</a></li>
+        <input type="file" id="fileInput" accept=".txt">
+        <li><a href="#" onclick="uploadAndImportDOT()">Import Graph</a></li>
+    </ul>
+    <a href="#"onclick="displayEdit()">Edit</a>
+    <a href="#"onclick="toggleSubmenu('submenu2')">Actions</a>
+    <ul id="submenu2">
+        <li><a href="#">Adjacency Matrix</a></li>
+        <li><a href="#">Incidence Matrix</a></li>
+        <li><a href="#">Critical Path</a></li>
+        <li><a href="#">Minimun Path (Dijkstra)</a></li>
+    </ul> 
+</section>
 
-
-  <div id="edit-popUp" class="popup">
-    <br />
+    <main class="content">
+      <div id="mynetwork"></div>
+      <div><pre id="nodes"></pre></div>
+      <div><pre id="edges"></pre></div>    
+    </main>
+    <div id="edit-popUp" class="popup">
     <span id="operation">Node</span> 
     <form>
       <fieldset>
@@ -90,26 +98,14 @@
                   <option value="unidirectional">Unidirectional</option>
                 </select>
               </div>
-
-              
           </fieldset>
       </form>
-  
       <div class="button-container">
         <button class="button" id="edge-add" onclick="addEdge();">Add</button>
         <button class="button" id="edge-remove" onclick="removeEdge();">Remove</button>
-        <br/>
-        <button class="button" id="edge-cancelButton">Cancel</button>
       </div>
     </div>  
   </div> 
-
-  <div class="button-container">
-    <p>Edit menu:</p>
-    <button class="button" id="editMode" onclick="displayEdit();">Node</button>
-  <div id="mynetwork"></div>
-  <div><pre id="nodes"></pre></div>
-  <div><pre id="edges"></pre></div> 
   <script src="script.js"></script>
 </body>
 </html>

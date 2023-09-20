@@ -63,7 +63,8 @@ function draw() {
     },
   };
   network = new vis.Network(container, data, options);
-}
+
+} 
 
 // convenience method to stringify a JSON object
 function toJSON(obj) {
@@ -72,13 +73,23 @@ function toJSON(obj) {
 function displayEdit() {
   document.getElementById("edit-popUp").style.display = "block";
 }
+function toggleSubmenu(submenuId) {
+  var submenu = document.getElementById(submenuId);
+  if (submenu.style.display === "none" || submenu.style.display === "") {
+      submenu.style.display = "block";
+  } else {
+      submenu.style.display = "none";
+  }
+}
 function addNode() {
   try {
     nodes.add({
       id: document.getElementById("node-id").value,
       label: document.getElementById("node-label").value,
+      title: document.getElementById("node-title").value +
+      "\n Prerequisite: " + document.getElementById("node-prerequisite").value,
     });
-    document.getElementById("network-popUp").style.display = "block";
+
   } catch (err) { 
     alert(err);
   }
@@ -89,6 +100,8 @@ function updateNode() {
     nodes.update({
       id: document.getElementById("node-id").value,
       label: document.getElementById("node-label").value,
+      title: document.getElementById("node-title").value +
+      "\n Prerequisite: " + document.getElementById("node-prerequisite").value,
     });
   } catch (err) {
     alert(err);
@@ -141,6 +154,112 @@ function removeEdge() {
   } catch (err) {
     alert(err);
   }
+}
+
+function exportToDOT() {
+  // Initialize an empty DOT string
+  var dotString = 'digraph mynetwork {\n';
+
+  // Get the current nodes and edges data
+  var currentNodes = nodes.get();
+  var currentEdges = edges.get();
+
+  // Add nodes to the DOT string
+  currentNodes.forEach(function (node) {
+    dotString += '  "' + node.id + '" [label="' + node.label + '"];\n';
+  });
+
+  // Add edges to the DOT string
+  currentEdges.forEach(function (edge) {
+    dotString += '  "' + edge.from + '" -> "' + edge.to + '";\n';
+  });
+
+  // Close the DOT string
+  dotString += '}';
+
+  // Create a Blob with the DOT data
+  var blob = new Blob([dotString], { type: 'text/plain' });
+
+  // Create a URL for the Blob
+  var url = window.URL.createObjectURL(blob);
+
+  // Create a download link for the user
+  var a = document.createElement('a');
+  a.href = url;
+  a.download = 'graph.txt';
+  a.style.display = 'none';
+
+  // Add the download link to the document and trigger a click event
+  document.body.appendChild(a);
+  a.click();
+
+  // Clean up by removing the download link and revoking the URL
+  document.body.removeChild(a);
+  window.URL.revokeObjectURL(url);
+}
+
+
+function uploadAndImportDOT() {
+  var fileInput = document.getElementById('fileInput');
+  
+  if (fileInput.files.length > 0) {
+    var file = fileInput.files[0];
+    
+    // Check if the selected file is a text file
+    if (file.type === 'text/plain') {
+      var reader = new FileReader();
+      
+      reader.onload = function(event) {
+        var dotString = event.target.result;
+
+        // Clear existing data
+        nodes.clear();
+        edges.clear();
+
+        // Parse the DOT language string
+        var parsedData = vis.parseDOTNetwork(dotString);
+
+        // Update your existing nodes and edges data
+        nodes.update(parsedData.nodes);
+        edges.update(parsedData.edges);
+
+        // You can also extend the options if needed
+        var updatedOptions = Object.assign({}, options);
+        // For example, set node color to 'red'
+        updatedOptions.nodes = {
+          color: 'red'
+        };
+
+        // Create a network with the updated data and options
+        network = new vis.Network(container, { nodes, edges }, updatedOptions);
+      };
+      
+      reader.readAsText(file);
+    } else {
+      alert('Please select a valid text file.');
+    }
+  } else {
+    alert('Please select a file to upload.');
+  }
+}
+
+
+
+function createNetwork(nodes, edges, options) {
+  // Create a network
+  var container = document.getElementById("mynetwork");
+  var data = {
+    nodes: nodes,
+    edges: edges,
+  };
+  
+  // Extend options as needed
+  options.nodes = {
+    color: 'red',
+    ...options.nodes, // You can extend other options here
+  };
+
+  var network = new vis.Network(container, data, options);
 }
 
 
