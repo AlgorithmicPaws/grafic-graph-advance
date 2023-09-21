@@ -63,6 +63,8 @@ function draw() {
     },
   };
   network = new vis.Network(container, data, options);
+  displayAdjacencyMatrix(nodes.get(), edges.get());
+  displayIncidenceMatrix(nodes.get(), edges.get());
 
 } 
 
@@ -242,6 +244,71 @@ function uploadAndImportDOT() {
     alert('Please select a file to upload.');
   }
 }
+
+function displayAdjacencyMatrix(nodes, edges) {
+  const nodeCount = nodes.length;
+  const matrix = [];
+
+  // Create an array of node IDs for easy reference
+  const nodeIds = nodes.map((node) => node.id);
+
+  for (let i = 0; i < nodeCount; i++) {
+    matrix[i] = [];
+    for (let j = 0; j < nodeCount; j++) {
+      matrix[i][j] = 0;
+    }
+  }
+
+  edges.forEach((edge) => {
+    const fromIndex = nodeIds.indexOf(edge.from);
+    const toIndex = nodeIds.indexOf(edge.to);
+    if (fromIndex !== -1 && toIndex !== -1) {
+      matrix[fromIndex][toIndex] = 1;
+      // If your graph is undirected, you can also set matrix[toIndex][fromIndex] = 1;
+    }
+  });
+
+  const matrixString = matrix.map((row) => row.join(' ')).join('\n');
+
+  const preElement = document.getElementById('adjacency-matrix');
+  preElement.textContent = matrixString;
+}
+
+// Call the function with your nodes and edges
+
+
+function displayIncidenceMatrix(nodes, edges) {
+  const nodeCount = nodes.length;
+  const edgeCount = edges.length;
+  const matrix = [];
+
+  // Create an array of node IDs for easy reference
+  const nodeIds = nodes.map((node) => node.id);
+
+  for (let i = 0; i < nodeCount; i++) {
+    matrix[i] = [];
+    for (let j = 0; j < edgeCount; j++) {
+      matrix[i][j] = 0;
+    }
+  }
+
+  edges.forEach((edge, j) => {
+    const fromIndex = nodeIds.indexOf(edge.from);
+    const toIndex = nodeIds.indexOf(edge.to);
+    if (fromIndex !== -1) {
+      matrix[fromIndex][j] = -1;
+    }
+    if (toIndex !== -1) {
+      matrix[toIndex][j] = 1;
+    }
+  });
+
+  const matrixString = matrix.map((row) => row.join(' ')).join('\n');
+
+  const preElement = document.getElementById('incidence-matrix');
+  preElement.textContent = matrixString;
+}
+
 
 
 
