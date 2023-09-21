@@ -13,102 +13,124 @@
   <header>
     <h1>Graphic Graph</h1>
   </header>
-  <section class="sidebar">
-    
-    <a href="#" onclick="toggleSubmenu('submenu1')">File
-      <i class="uil uil-angle-left"></i>
-    </a>
-    <ul id="submenu1">
-        <li><a href="#" onclick="exportToDOT()">Export Graph</a></li>
-        <input type="file" id="fileInput" accept=".txt">
-        <li><a href="#" onclick="uploadAndImportDOT()">Import Graph</a></li>
-    </ul>
-    <a href="#"onclick="displayEdit()">Edit</a>
-    <a href="#"onclick="toggleSubmenu('submenu2')">Actions</a>
-    <ul id="submenu2">
-        <li><a href="#">Adjacency Matrix</a></li>
-        <li><a href="#">Incidence Matrix</a></li>
-        <li><a href="#">Critical Path</a></li>
-        <li><a href="#">Minimun Path (Dijkstra)</a></li>
-    </ul> 
-</section>
+  <main class="content">
 
-    <main class="content">
-      <div id="mynetwork"></div>
-      <div><pre id="nodes"></pre></div>
-      <div><pre id="edges"></pre></div>    
-      <div><pre id="adjacency-matrix"></pre></div>
-      <div><pre id="incidence-matrix"></pre></div>
 
-    </main>
+    <section class="sidebar">
+      <div class="sidebar-item">
+        <a href="#" onclick="toggleSubmenu('submenu1'), toggleIconClass('submenu1')">File
+          <i class="uil uil-angle-left" id="submenu1-icon"></i>
+        </a>
+        
+      </div>
+      <ul id="submenu1">
+          <li><a href="#" onclick="exportToDOT()">Export Graph</a></li>
+          <li><a href="#" onclick="uploadAndImportDOT()">Import Graph</a>
+            <input type="file" id="fileInput" accept=".txt">
+          </li>
+
+      </ul>
+      <a href="#"onclick="displayEdit()">Edit</a>
+      <a href="#"onclick="toggleSubmenu('submenu2'), toggleIconClass('submenu2')">Actions
+        <i class="uil uil-angle-left" id="submenu2-icon"></i>
+      </a>
+      <ul id="submenu2">
+          <li><a href="#">Adjacency Matrix</a></li>
+          <li><a href="#">Incidence Matrix</a></li>
+          <li><a href="#">Critical Path</a></li>
+          <li><a href="#">Minimun Path (Dijkstra)</a></li>
+      </ul> 
+    </section>
+
+    <div id="mynetwork"></div>
+
+
     <div id="edit-popUp" class="popup">
-    <span id="operation">Node</span> 
-    <form>
-      <fieldset>
-        <legend>Node Information</legend>
-        <div class="form-group">
-          <label for="node-id">Id:</label>
-          <input type="text" id="node-id" placeholder="Enter ID" value="" />
-        </div>
-
-        <div class="form-group">
-          <label for="node-label">Name:</label>
-          <input type="text" id="node-label" placeholder="Enter Name" value="" />
-        </div>
-
-        <div class="form-group">
-          <label for="node-prerequisite">Prerequisite:</label>
-          <input type="text" id="node-prerequisite" placeholder="Enter Nodes" value="" />
-        </div>
-
-        <div class="form-group">
-          <label for="node-title">Task Time:</label>
-          <input type="text" id="node-title" placeholder="Enter Time" value="" />
-        </div>
-      </fieldset>
-    </form>
-    <div class="button-container">
-      <button class="button" id="node-add" onclick="addNode();">Add</button>
-      <button class="button" id="node-update" onclick="updateNode();">Update</button>
-      <button class="button" id="node-remove" onclick="removeNode();">Remove</button>
-    </div>
-    <div>
-      <br />
-      <span id="operation">Edge</span> 
+      <span id="operation">Node</span> 
       <form>
-          <fieldset>
-              <legend>Edge Information</legend>
-              <div class="form-group">
-                <label for="edge-label">Id:</label>
-                <input id="edge-id" type="text" placeholder="Enter ID" value="" />
-              </div>
-              <div class="form-group">
-                <label for="edge-label">From:</label>
-                <input id="edge-from" type="text" placeholder="Enter From" value="" />
-              </div>
-              <div class="form-group">
-                <label for="edge-label">To:</label>
-                <input id="edge-to" type="text"  placeholder="Enter To" value="" />
-              </div>
-              <div class="form-group">
-                <label for="edge-label">Cost:</label>
-                <input id="edge-label" type="text" placeholder="Enter Cost" value="" />  
-              </div>
-              <div class="form-group">
-                <label for="edge-label">Type:</label>
-                <select id="edge-type" name="edge-type">
-                  <option value="bidirectional">Bidirectional</option>
-                  <option value="unidirectional">Unidirectional</option>
-                </select>
-              </div>
-          </fieldset>
+        <fieldset>
+          <legend>Node Information</legend>
+          <div class="form-group">
+            <label for="node-id">Id:</label>
+            <input type="text" id="node-id" placeholder="Enter ID" value="" />
+          </div>
+  
+          <div class="form-group">
+            <label for="node-label">Name:</label>
+            <input type="text" id="node-label" placeholder="Enter Name" value="" />
+          </div>
+  
+          <div class="form-group">
+            <label for="node-prerequisite">Prerequisite:</label>
+            <input type="text" id="node-prerequisite" placeholder="Enter Nodes" value="" />
+          </div>
+  
+          <div class="form-group">
+            <label for="node-title">Task Time:</label>
+            <input type="text" id="node-title" placeholder="Enter Time" value="" />
+          </div>
+        </fieldset>
       </form>
       <div class="button-container">
-        <button class="button" id="edge-add" onclick="addEdge();">Add</button>
-        <button class="button" id="edge-remove" onclick="removeEdge();">Remove</button>
+        <button class="button" id="node-add" onclick="addNode();">Add</button>
+        <button class="button" id="node-update" onclick="updateNode();">Update</button>
+        <button class="button" id="node-remove" onclick="removeNode();">Remove</button>
       </div>
-    </div>  
-  </div> 
+      <div>
+        <br />
+        <span id="operation">Edge</span> 
+        <form>
+            <fieldset>
+                <legend>Edge Information</legend>
+
+                <div class="form-group">
+                  <label for="edge-label">Id:</label>
+                  <input id="edge-id" type="text" placeholder="Enter ID" value="" />
+                </div>
+
+                <div class="form-group">
+                  <label for="edge-label">From:</label>
+                  <input id="edge-from" type="text" placeholder="Enter From" value="" />
+                </div>
+
+                <div class="form-group">
+                  <label for="edge-label">To:</label>
+                  <input id="edge-to" type="text"  placeholder="Enter To" value="" />
+                </div>
+
+                <div class="form-group">
+                  <label for="edge-label">Cost:</label>
+                  <input id="edge-label" type="text" placeholder="Enter Cost" value="" />  
+                </div>
+
+                <div class="form-group">
+                  <label for="edge-label">Type:</label>
+                  <select id="edge-type" name="edge-type">
+                    <option value="bidirectional">Bidirectional</option>
+                    <option value="unidirectional">Unidirectional</option>
+                  </select>
+                </div>
+                <div class="button-container">
+                  <button class="button" id="edge-add" onclick="addEdge();">Add</button>
+                  <button class="button" id="edge-remove" onclick="removeEdge();">Remove</button>
+                </div>
+            </fieldset>
+        </form>
+      </div>  
+    </div> 
+  </main>
+  <section>
+    <div class="info-section" id="graphInfo">
+      <pre id="nodes"></pre>
+      <pre id="edges"></pre>
+    </div> 
+    </section> 
+    <section>
+    <div class="info-section" id="matrixs">
+      <pre id="adjacency-matrix"></pre>
+      <pre id="incidence-matrix"></pre>
+    </div>
+  </section>
   <script src="script.js"></script>
 </body>
 </html>

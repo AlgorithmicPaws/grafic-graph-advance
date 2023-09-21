@@ -15,16 +15,6 @@
     --container-color: hsl(250, 29%, 16%);
     --scroll-bar-color: hsl(250, 12%, 90%);
     --scroll-thumb-color: hsl(250, 12%, 80%);
-
-    /* .25rem = 4px, .5rem = 8px, .75rem = 12px ... */
-    --mb-0-25: .25rem;
-    --mb-0-5: .5rem;
-    --mb-0-75: .75rem;
-    --mb-1: 1rem;
-    --mb-1-5: 1.5rem;
-    --mb-2: 2rem;
-    --mb-2-5: 2.5rem;
-    --mb-3: 3rem;
 }
 
 html {
@@ -49,29 +39,30 @@ header{
 input{
     font-family: 'Poppins', sans-serif;
     border-radius: 10px;
-    background-color: rgba(25, 12, 41, .05);
+    background-color: rgba(25, 12, 41,  .05);
     color: #ffff;   
-    height: 25px;
+    height: 1.5rem;
     border-width: 0.01px;
 }
 form{
   margin: 1rem;
+  margin-top: rem;
 }
 pre {
-  text-align: center; /* Center the text horizontally */
   display: flex;
-  align-items: center; /* Center the container vertically */
-  justify-content: center; /* Center the container horizontally */
+  /* Center the container horizontally */
   height: 100%; /* Make the container fill its parent's height */
   margin: 0; /* Remove any default margin */
 }
+main{
+  display: inline-flex;
+}
+
 .form-group {
   display: flex; 
   align-items: center; 
   margin-bottom: .5rem; 
 }
-
-
 .form-group label {
   flex: 1; 
   margin-right: .5rem; 
@@ -82,8 +73,9 @@ pre {
 .form-group select {
   flex: 2;
   margin-right: .5rem; 
-
 }
+
+
 .button{
     display: inline-block;
     border-radius: 0.5rem;
@@ -95,7 +87,6 @@ pre {
     border-width: 0px;
     font-weight:500;
     margin-bottom: .5rem;
-
 }       
 .button:hover{
     background-color: #ffff;
@@ -115,71 +106,106 @@ pre {
   cursor: pointer;
 }
 .icon-button i {
-  font-size: 24px; /* Adjust the font size to make the icon bigger */
-}
-.sidebar {
-  height: 100%;
-  width: 250px;
-  position: fixed;
-  top: 0;
-  left: 0;
-  background-color: #333;
-  padding-top: 20px;
+  font-size: 30px; /* Adjust the font size to make the icon bigger */
 }
 
-/* Sidebar links */
+
+
+.sidebar {
+  height: 100%;
+  width: 12rem;
+  margin: 3rem;
+  background-color: rgba(33, 29, 53, 0.8);
+  box-shadow: 0 0 3rem 0 rgba(126, 40, 250, 0.5);
+  border-radius: 0.5rem;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
 .sidebar a {
-  padding: 10px 15px;
+  padding-left: 15px;
+  padding-bottom: 10px;
   text-decoration: none;
   font-size: 16px;
   color: white; 
   display: block;
   flex: 1;
 }
-
 .sidebar i{
-  font-size: 18px;
+  font-size: 1.2rem;
   color: white; 
-  flex: 2;
+  text-align: left;
 }
-
 .sidebar ul {
+  list-style-type: none;
   padding-left: 20px;
   display: none;
+  margin-top:0px;
 }
-
 .sidebar ul li {
   margin-bottom: 5px;
 }
-
 .sidebar a:hover {
-  background-color: #555;
+  background-color: hsl(250, 92%, 75%);
 }
-#edgeCancel{
-    margin: 1rem;
+.rotate-icon {
+  transition: transform 0.3s ease; /* Add a smooth transition */
+}
+
+.rotate-icon.rotate {
+  transform: rotate(90deg); /* Rotate the icon 90 degrees */
+}
+
+
+.info-section {
+  display: flex;
+  padding :3rem;
+  margin-top: 1rem;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(33, 29, 53, 1);
+
+}
+.info-section pre {
+  display: flex;
+  padding :2rem;
+
+  justify-content: center;
+  align-items: center;
+
 }
 #mynetwork {
-    width: 1000px;
-    height: 800px;
-    margin: 0 auto;   
+    width: 70rem;
+    height: 47rem;
+
+
     box-shadow: 0 0 3rem 0 rgba(254,1,154, .3); 
     border-radius: 5px;
     background-color: rgba(255, 255, 255, .05);
     backdrop-filter: blur(5px);
 }
+#fileInput{
+  display: "none";
+}
+
 #edit-popUp {
-    display: none;
+    display: none;  
     position: absolute;
     right: 1%  ; /* Position it on the left side */
-    top: 50%; /* Adjust the vertical position as needed */
+    top: 55%; /* Adjust the vertical position as needed */
     transform: translateY(-50%); /* Center it vertically */
     color: #5fa7fa; /* Your desired color here */
-    background-color: rgba(33, 29, 53, .5);
-    border-radius: 8px;
+    background-color: rgba(33, 29, 53, .8);
+    box-shadow: 0 0 3rem 0 rgba(126,40,250, .5);
+    border-radius: 8px; 
     padding: 10px;
     text-align: center;
-  }
+  } 
   #operation{
     font-size: 20px;
+    color: #fff;
     font-weight: bold;
     }
+/* Center the graphInfo section */
+

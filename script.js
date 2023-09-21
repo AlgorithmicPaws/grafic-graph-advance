@@ -8,7 +8,7 @@ function draw() {
       nodes.get(),
       null,
       4
-    );
+    );    
   });
   nodes.add([
     { id: "1", label: "Node 1" },
@@ -26,12 +26,14 @@ function draw() {
       null,
       4
     );
+    displayAdjacencyMatrix(nodes.get(), edges.get());
+    displayIncidenceMatrix(nodes.get(), edges.get());
   });
   edges.add([
-    { id: "1", from: "1", to: "2" },
-    { id: "2", from: "1", to: "3" },
-    { id: "3", from: "2", to: "4" },
-    { id: "4", from: "2", to: "5" },
+    { id: "1", from: "1", to: "2" ,arrows: null},
+    { id: "2", from: "1", to: "3" ,arrows: null},
+    { id: "3", from: "2", to: "4" ,arrows: null},
+    { id: "4", from: "2", to: "5" ,arrows: null},
   ]);
 
   // create a network
@@ -63,26 +65,9 @@ function draw() {
     },
   };
   network = new vis.Network(container, data, options);
-  displayAdjacencyMatrix(nodes.get(), edges.get());
-  displayIncidenceMatrix(nodes.get(), edges.get());
-
 } 
 
-// convenience method to stringify a JSON object
-function toJSON(obj) {
-  return JSON.stringify(obj, null, 4);
-}
-function displayEdit() {
-  document.getElementById("edit-popUp").style.display = "block";
-}
-function toggleSubmenu(submenuId) {
-  var submenu = document.getElementById(submenuId);
-  if (submenu.style.display === "none" || submenu.style.display === "") {
-      submenu.style.display = "block";
-  } else {
-      submenu.style.display = "none";
-  }
-}
+//CRUD Graph
 function addNode() {
   try {
     nodes.add({
@@ -90,13 +75,13 @@ function addNode() {
       label: document.getElementById("node-label").value,
       title: document.getElementById("node-title").value +
       "\n Prerequisite: " + document.getElementById("node-prerequisite").value,
+      
     });
 
   } catch (err) { 
     alert(err);
   }
 }
-
 function updateNode() {
   try {
     nodes.update({
@@ -149,7 +134,6 @@ function addEdge() {
     document.getElementById("edge-to").value = "";
     document.getElementById("edge-lable").value = "";
   } 
-
 function removeEdge() {
   try {
     edges.remove({ id: document.getElementById("edge-id").value });
@@ -157,6 +141,76 @@ function removeEdge() {
     alert(err);
   }
 }
+
+
+//Display Graph info
+function displayAdjacencyMatrix(nodes, edges) {
+  const nodeCount = nodes.length;
+  const matrix = [];
+
+  // Create an array of node IDs for easy reference
+  const nodeIds = nodes.map((node) => node.id);
+
+  for (let i = 0; i < nodeCount; i++) {
+    matrix[i] = [];
+    for (let j = 0; j < nodeCount; j++) {
+      matrix[i][j] = 0;
+    }
+  }
+
+  edges.forEach((edge) => {
+    const fromIndex = nodeIds.indexOf(edge.from);
+    const toIndex = nodeIds.indexOf(edge.to);
+    if (fromIndex !== -1 && toIndex !== -1) {
+      matrix[fromIndex][toIndex] = 1;
+      // If your graph is undirected, you can also set matrix[toIndex][fromIndex] = 1;
+    }
+  });
+
+  const matrixString = matrix.map((row) => row.join(' ')).join('\n');
+
+  const preElement = document.getElementById('adjacency-matrix');
+  preElement.textContent = matrixString;
+}
+
+function displayIncidenceMatrix(nodes, edges) {
+  const nodeCount = nodes.length;
+  const edgeCount = edges.length;
+  const matrix = [];
+
+  // Create an array of node IDs for easy reference
+  const nodeIds = nodes.map((node) => node.id);
+
+  for (let i = 0; i < nodeCount; i++) {
+    matrix[i] = [];
+    for (let j = 0; j < edgeCount; j++) {
+      matrix[i][j] = 0;
+    }
+  }
+
+  edges.forEach((edge, j) => {
+    const fromIndex = nodeIds.indexOf(edge.from);
+    const toIndex = nodeIds.indexOf(edge.to);
+
+    // Check if the edge is directed or not
+    if (edge.arrows !== null) {
+      matrix[fromIndex][j] = -1;
+      matrix[toIndex][j] = 1;
+    } else {
+      matrix[fromIndex][j] = 1;
+      matrix[toIndex][j] = 1;
+    }
+  });
+
+  const matrixString = matrix.map((row) => row.join(' ')).join('\n');
+
+  const preElement = document.getElementById('incidence-matrix');
+  preElement.textContent = matrixString;
+}
+
+
+
+// Export and import info
 
 function exportToDOT() {
   // Initialize an empty DOT string
@@ -199,8 +253,6 @@ function exportToDOT() {
   document.body.removeChild(a);
   window.URL.revokeObjectURL(url);
 }
-
-
 function uploadAndImportDOT() {
   var fileInput = document.getElementById('fileInput');
   
@@ -245,91 +297,44 @@ function uploadAndImportDOT() {
   }
 }
 
-function displayAdjacencyMatrix(nodes, edges) {
-  const nodeCount = nodes.length;
-  const matrix = [];
-
-  // Create an array of node IDs for easy reference
-  const nodeIds = nodes.map((node) => node.id);
-
-  for (let i = 0; i < nodeCount; i++) {
-    matrix[i] = [];
-    for (let j = 0; j < nodeCount; j++) {
-      matrix[i][j] = 0;
-    }
+// Dom funtions
+function displayEdit() {
+  var popUpDisplay = document.getElementById("edit-popUp");
+  if (popUpDisplay.style.display === "none" || popUpDisplay.style.display === "") {
+    popUpDisplay.style.display = "block";
+  } else {
+    popUpDisplay.style.display = "none";
   }
-
-  edges.forEach((edge) => {
-    const fromIndex = nodeIds.indexOf(edge.from);
-    const toIndex = nodeIds.indexOf(edge.to);
-    if (fromIndex !== -1 && toIndex !== -1) {
-      matrix[fromIndex][toIndex] = 1;
-      // If your graph is undirected, you can also set matrix[toIndex][fromIndex] = 1;
-    }
-  });
-
-  const matrixString = matrix.map((row) => row.join(' ')).join('\n');
-
-  const preElement = document.getElementById('adjacency-matrix');
-  preElement.textContent = matrixString;
 }
-
-// Call the function with your nodes and edges
-
-
-function displayIncidenceMatrix(nodes, edges) {
-  const nodeCount = nodes.length;
-  const edgeCount = edges.length;
-  const matrix = [];
-
-  // Create an array of node IDs for easy reference
-  const nodeIds = nodes.map((node) => node.id);
-
-  for (let i = 0; i < nodeCount; i++) {
-    matrix[i] = [];
-    for (let j = 0; j < edgeCount; j++) {
-      matrix[i][j] = 0;
-    }
+function toggleSubmenu(submenuId) {
+  var submenu = document.getElementById(submenuId);
+  if (submenu.style.display === "none" || submenu.style.display === "") {
+      submenu.style.display = "block";
+  } else {
+      submenu.style.display = "none";
   }
-
-  edges.forEach((edge, j) => {
-    const fromIndex = nodeIds.indexOf(edge.from);
-    const toIndex = nodeIds.indexOf(edge.to);
-    if (fromIndex !== -1) {
-      matrix[fromIndex][j] = -1;
-    }
-    if (toIndex !== -1) {
-      matrix[toIndex][j] = 1;
-    }
-  });
-
-  const matrixString = matrix.map((row) => row.join(' ')).join('\n');
-
-  const preElement = document.getElementById('incidence-matrix');
-  preElement.textContent = matrixString;
+}
+function toggleIconClass(submenuId) {
+  const iconElement = document.getElementById(submenuId + '-icon'); // Get the <i> element by ID
+  if (iconElement) {
+      // Toggle between 'uil-angle-left' and 'uil-angle-right' classes
+      if (iconElement.classList.contains('uil-angle-left')) {
+          iconElement.classList.remove('uil-angle-left');
+          iconElement.classList.add('uil-angle-down');
+      } else {
+          iconElement.classList.remove('uil-angle-down');
+          iconElement.classList.add('uil-angle-left');
+      }
+  }
 }
 
 
-
-
-function createNetwork(nodes, edges, options) {
-  // Create a network
-  var container = document.getElementById("mynetwork");
-  var data = {
-    nodes: nodes,
-    edges: edges,
-  };
-  
-  // Extend options as needed
-  options.nodes = {
-    color: 'red',
-    ...options.nodes, // You can extend other options here
-  };
-
-  var network = new vis.Network(container, data, options);
+// convenience method to stringify a JSON object
+function toJSON(obj) {
+  return JSON.stringify(obj, null, 4);
 }
 
-
+//Draw graph
 window.addEventListener("load", () => {
   draw();
 });
