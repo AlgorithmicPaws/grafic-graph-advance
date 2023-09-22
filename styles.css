@@ -159,7 +159,7 @@ main{
 
 
 .info-section {
-  display: flex;
+  display: none;
   padding :3rem;
   margin-top: 1rem;
   justify-content: center;
@@ -168,25 +168,22 @@ main{
 
 }
 .info-section pre {
-  display: flex;
-  padding :2rem;
-
+  padding :2rem;  
+  margin: auto; /* Center horizontally */
   justify-content: center;
-  align-items: center;
+  align-items: center;  
 
 }
 #mynetwork {
     width: 70rem;
     height: 47rem;
-
-
     box-shadow: 0 0 3rem 0 rgba(254,1,154, .3); 
     border-radius: 5px;
     background-color: rgba(255, 255, 255, .05);
     backdrop-filter: blur(5px);
 }
 #fileInput{
-  display: "none";
+  display: none;
 }
 
 #edit-popUp {

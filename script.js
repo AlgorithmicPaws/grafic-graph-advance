@@ -10,14 +10,6 @@ function draw() {
       4
     );    
   });
-  nodes.add([
-    { id: "1", label: "Node 1" },
-    { id: "2", label: "Node 2" },
-    { id: "3", label: "Node 3" },
-    { id: "4", label: "Node 4" },
-    { id: "5", label: "Node 5" },
-  ]);
-
   // create an array with edges
   edges = new vis.DataSet();
   edges.on("*", function () {
@@ -29,13 +21,6 @@ function draw() {
     displayAdjacencyMatrix(nodes.get(), edges.get());
     displayIncidenceMatrix(nodes.get(), edges.get());
   });
-  edges.add([
-    { id: "1", from: "1", to: "2" ,arrows: null},
-    { id: "2", from: "1", to: "3" ,arrows: null},
-    { id: "3", from: "2", to: "4" ,arrows: null},
-    { id: "4", from: "2", to: "5" ,arrows: null},
-  ]);
-
   // create a network
   var container = document.getElementById("mynetwork");
   var data = {
@@ -222,12 +207,17 @@ function exportToDOT() {
 
   // Add nodes to the DOT string
   currentNodes.forEach(function (node) {
-    dotString += '  "' + node.id + '" [label="' + node.label + '"];\n';
+    dotString += '  "' + node.id + '" [label="' + node.label + '"] [title="' + node.title + '"] ;\n';
+
   });
 
   // Add edges to the DOT string
   currentEdges.forEach(function (edge) {
-    dotString += '  "' + edge.from + '" -> "' + edge.to + '";\n';
+    if (edge.arrows === null) {
+      dotString += '  "' + edge.from + '" -- "' + edge.to  + '" [label="' + edge.label + '"] ;\n';
+    } else {
+      dotString += '  "' + edge.from + '" -> "' + edge.to  + '" [label="' + edge.label + '"] ;\n';
+    }
   });
 
   // Close the DOT string
@@ -252,17 +242,28 @@ function exportToDOT() {
   // Clean up by removing the download link and revoking the URL
   document.body.removeChild(a);
   window.URL.revokeObjectURL(url);
+}function uploadAndImportDOT() {
+  // Trigger the file input when the "Import Graph" anchor tag is clicked
+  document.getElementById("fileInput").click();
 }
+
+// Add an event listener to the file input to handle file selection
+
 function uploadAndImportDOT() {
-  var fileInput = document.getElementById('fileInput');
-  
+  document.getElementById("fileInput").click();
+}
+document.getElementById("fileInput").addEventListener("change", handleFileUpload);
+
+// Function to handle the selected file and import the graph
+function handleFileUpload(event) {
+  var fileInput = event.target;
   if (fileInput.files.length > 0) {
     var file = fileInput.files[0];
-    
+
     // Check if the selected file is a text file
     if (file.type === 'text/plain') {
       var reader = new FileReader();
-      
+
       reader.onload = function(event) {
         var dotString = event.target.result;
 
@@ -278,16 +279,10 @@ function uploadAndImportDOT() {
         edges.update(parsedData.edges);
 
         // You can also extend the options if needed
-        var updatedOptions = Object.assign({}, options);
-        // For example, set node color to 'red'
-        updatedOptions.nodes = {
-          color: 'red'
-        };
-
         // Create a network with the updated data and options
         network = new vis.Network(container, { nodes, edges }, updatedOptions);
       };
-      
+
       reader.readAsText(file);
     } else {
       alert('Please select a valid text file.');
@@ -297,7 +292,31 @@ function uploadAndImportDOT() {
   }
 }
 
+
+
 // Dom funtions
+function displayInfoSection() {
+  var infoNode = document.getElementById("graphInfo");
+  if (infoNode.style.display === "none" || infoNode.style.display === "") {
+    infoNode.style.display = "block";
+  } else {
+    infoNode.style.display = "none";
+  }
+}
+function displayAdjaMatrix() {
+  var section = document.getElementById("matrixs");
+  if (section.style.display === "none" || section.style.display === "") {
+    section.style.display = "block";
+  } else {
+    section.style.display = "none";
+  }
+  var section = document.getElementById("matrixs");
+  if (section.style.display === "none" || section.style.display === "") {
+    section.style.display = "block";
+  } else {
+    section.style.display = "none";
+  }
+}
 function displayEdit() {
   var popUpDisplay = document.getElementById("edit-popUp");
   if (popUpDisplay.style.display === "none" || popUpDisplay.style.display === "") {
@@ -306,6 +325,8 @@ function displayEdit() {
     popUpDisplay.style.display = "none";
   }
 }
+// Get the import graph link by its ID
+
 function toggleSubmenu(submenuId) {
   var submenu = document.getElementById(submenuId);
   if (submenu.style.display === "none" || submenu.style.display === "") {
