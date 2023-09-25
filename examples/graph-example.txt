@@ -1,0 +1,26 @@
+digraph mynetwork {
+  "1" [label="A"] [title="12
+ Prerequisite: B"] ;
+  "2" [label="B"] [title="12
+ Prerequisite: A"] ;
+  "3" [label="C"] [title="14
+ Prerequisite: A"] ;
+  "4" [label="D"] [title="13
+ Prerequisite: A"] ;
+  "5" [label="E"] [title="14
+ Prerequisite: A"] ;
+  "6" [label="F"] [title="7
+ Prerequisite: "] ;
+  "7" [label="G"] [title="3
+ Prerequisite: D"] ;
+  "8" [label="H"] [title="10
+ Prerequisite: "] ;
+  "2" -- "1" [label="3"] ;
+  "2" -> "3" [label="5"] ;
+  "1" -> "4" [label="7"] ;
+  "1" -- "5" [label="9"] ;
+  "4" -- "7" [label="2"] ;
+  "4" -> "6" [label="10"] ;
+  "5" -- "6" [label="2"] ;
+  "5" -- "8" [label="4"] ;
+}
