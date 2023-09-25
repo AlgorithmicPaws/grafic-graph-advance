@@ -87,7 +87,6 @@ function removeNode() {
   }
 }
 function addEdge() {
-  // Obtén el valor del elemento select con ID "edge-type"
   var edgeType = document.getElementById("edge-type").value;
 
     try {
@@ -98,7 +97,6 @@ function addEdge() {
         to: document.getElementById("edge-to").value,
         label: document.getElementById("edge-label").value,
         arrows: null,
-
       });
     }
     else {
@@ -207,7 +205,8 @@ function exportToDOT() {
 
   // Add nodes to the DOT string
   currentNodes.forEach(function (node) {
-    dotString += '  "' + node.id + '" [label="' + node.label + '"] [title="' + node.title + '"] ;\n';
+    dotString += '"' + node.id + '" [label="' + node.label + '", title="' + node.title + '"] ;\n';
+
 
   });
 
