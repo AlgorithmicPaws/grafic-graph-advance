@@ -276,10 +276,6 @@ function handleFileUpload(event) {
         // Update your existing nodes and edges data
         nodes.update(parsedData.nodes);
         edges.update(parsedData.edges);
-
-        // You can also extend the options if needed
-        // Create a network with the updated data and options
-        network = new vis.Network(container, { nodes, edges }, updatedOptions);
       };
 
       reader.readAsText(file);
@@ -290,6 +286,101 @@ function handleFileUpload(event) {
     alert('Please select a file to upload.');
   }
 }
+
+
+function findMinimumPath() {
+  // Get the start and end node IDs from the input fields
+  const startNodeId = document.getElementById("start-mnode").value;
+  const endNodeId = document.getElementById("end-mnode").value;
+
+  // Check if both start and end nodes exist
+  if (!nodes.get(startNodeId) || !nodes.get(endNodeId)) {
+    alert("Start or end node not found.");
+    return;
+  }
+
+  // Create a map to store the distance from the start node to each node
+  const distance = {};
+  // Create a map to store the previous node in the shortest path
+  const previous = {};
+  // Create a set to keep track of visited nodes
+  const visited = new Set();
+
+  // Initialize distances and previous nodes
+  nodes.forEach((node) => {
+    distance[node.id] = Infinity;
+    previous[node.id] = null;
+  });
+
+  distance[startNodeId] = 0;
+
+  while (visited.size < nodes.length) {
+    // Find the node with the shortest distance that has not been visited yet
+    let minNodeId = null;
+    nodes.forEach((node) => {
+      if (!visited.has(node.id) && (minNodeId === null || distance[node.id] < distance[minNodeId])) {
+        minNodeId = node.id;
+      }
+    });
+
+    if (minNodeId === null || distance[minNodeId] === Infinity) {
+      // No reachable nodes left
+      break;
+    }
+
+    visited.add(minNodeId);
+
+    // Update the distances and previous nodes for neighboring nodes
+    const neighbors = network.getConnectedNodes(minNodeId);
+    neighbors.forEach((neighborId) => {
+      const edgeId = network.getEdges(minNodeId, neighborId)[0]; // Assuming there is only one edge between nodes
+      const edge = edges.get(edgeId);
+      const edgeWeight = parseFloat(edge.label); // Convert the edge label to a number
+
+      if (edgeWeight + distance[minNodeId] < distance[neighborId]) {
+        distance[neighborId] = edgeWeight + distance[minNodeId];
+        previous[neighborId] = minNodeId;
+      }
+    });
+  }
+
+  // Reconstruct the minimum path
+  const path = [];
+  let currentNode = endNodeId;
+  while (currentNode !== startNodeId) {
+    path.unshift(currentNode);
+    currentNode = previous[currentNode];
+  }
+  path.unshift(startNodeId);
+
+  // Highlight the minimum path in the visualization
+  nodes.forEach((node) => {
+    const nodeId = node.id;
+    if (path.includes(nodeId)) {
+      // Highlight nodes in the path
+      nodes.update({ id: nodeId, color: { background: "yellow" } });
+    } else {
+      // Reset color for other nodes
+      nodes.update({ id: nodeId, color: { background: null } });
+    }
+  });
+
+  edges.forEach((edge) => {
+    const edgeId = edge.id;
+    if (path.includes(edge.from) && path.includes(edge.to)) {
+      // Highlight edges in the path
+      edges.update({ id: edgeId, color: { color: "green" } });
+    } else {
+      // Reset color for other edges
+      edges.update({ id: edgeId, color: { color: "#d6116d" } });
+    }
+  });
+
+  // Display the minimum path in a text element
+  const pathText = path.join(" -> ");
+  document.getElementById("minimum-path-result").textContent = `Minimum Path: ${pathText}`;
+}
+
 
 
 
@@ -303,13 +394,7 @@ function displayInfoSection() {
   }
 }
 function displayAdjaMatrix() {
-  var section = document.getElementById("matrixs");
-  if (section.style.display === "none" || section.style.display === "") {
-    section.style.display = "block";
-  } else {
-    section.style.display = "none";
-  }
-  var section = document.getElementById("matrixs");
+  var section = document.getElementById("matrixes");
   if (section.style.display === "none" || section.style.display === "") {
     section.style.display = "block";
   } else {
@@ -318,13 +403,41 @@ function displayAdjaMatrix() {
 }
 function displayEdit() {
   var popUpDisplay = document.getElementById("edit-popUp");
+  var minPathPopup  = document.getElementById("mpath-popUp");
+  var cPathPopup  = document.getElementById("cpath-popUp");
   if (popUpDisplay.style.display === "none" || popUpDisplay.style.display === "") {
+    minPathPopup.style.display = "none"
+    cPathPopup.style.display = "none"
     popUpDisplay.style.display = "block";
   } else {
     popUpDisplay.style.display = "none";
   }
 }
-// Get the import graph link by its ID
+function showMinPathPopup() {
+  var popUpDisplay = document.getElementById("edit-popUp");
+  var minPathPopup  = document.getElementById("mpath-popUp");
+  var cPathPopup  = document.getElementById("cpath-popUp");
+  if (minPathPopup.style.display === "none" || minPathPopup.style.display === "") {
+    cPathPopup.style.display = "none"
+    popUpDisplay.style.display = "none";
+    minPathPopup.style.display = "block";
+  } else {
+    minPathPopup.style.display = "none";
+  }
+}
+function showCriticalPathPopup() {
+  var popUpDisplay = document.getElementById("edit-popUp");
+  var minPathPopup  = document.getElementById("mpath-popUp");
+  var cPathPopup  = document.getElementById("cpath-popUp");
+  if (cPathPopup.style.display === "none" || cPathPopup.style.display === "") {
+    minPathPopup.style.display = "none"
+    popUpDisplay.style.display = "none";
+    cPathPopup.style.display = "block";
+  } else {
+    cPathPopup.style.display = "none";
+  }
+}
+
 
 function toggleSubmenu(submenuId) {
   var submenu = document.getElementById(submenuId);
@@ -347,8 +460,6 @@ function toggleIconClass(submenuId) {
       }
   }
 }
-
-
 // convenience method to stringify a JSON object
 function toJSON(obj) {
   return JSON.stringify(obj, null, 4);

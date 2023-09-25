@@ -24,22 +24,25 @@
         
       </div>
       <ul id="submenu1">
-          <li><a href="#" onclick="exportToDOT()">Export Graph</a></li>
-          <li><a href="#" id="import-graph-link" onclick="uploadAndImportDOT()">Import Graph</a>
-            <input type="file" id="fileInput" accept=".txt">
-          </li>
-
+        <li><hr></li>
+        <li><a href="#" onclick="exportToDOT()">Export Graph</a></li>
+        <li><a href="#" id="import-graph-link" onclick="uploadAndImportDOT()">Import Graph</a>
+          <input type="file" id="fileInput" accept=".txt">
+        </li>
+        <li><hr></li>
       </ul>
       <a href="#"onclick="displayEdit()">Edit</a>
       <a href="#"onclick="toggleSubmenu('submenu2'), toggleIconClass('submenu2')">Actions
         <i class="uil uil-angle-left" id="submenu2-icon"></i>
       </a>
       <ul id="submenu2">
+          <li><hr></li>
           <li><a href="#" onclick="displayInfoSection()">Graph Info</a></li>
-          <li><a href="#">Adjacency Matrix</a></li>
-          <li><a href="#">Incidence Matrix</a></li>
-          <li><a href="#">Critical Path</a></li>
-          <li><a href="#">Minimun Path (Dijkstra)</a></li>
+          <li><a href="#" onclick="displayAdjaMatrix()">Graph Matrixes</a></li>
+          <li><hr></li>
+          <li><a href="#" onclick="showCriticalPathPopup()">Critical Path (Dijkstra)</a></li>
+          <li><a href="#" onclick="showMinPathPopup()">Minimun Path (Dijkstra)</a></li>
+          <li><hr></li>
       </ul> 
     </section>
 
@@ -119,6 +122,48 @@
         </form>
       </div>  
     </div> 
+    <div id="mpath-popUp" class="popup">
+      <span id="operation">Minimum Path</span>
+      <form id="min-path-form">
+        <fieldset>
+          <legend>Find Minimum Path</legend>
+          <div class="form-group">
+            <label for="start-node">Start Node:</label>
+            <input type="text" id="start-mnode" placeholder="Enter Start Node Id" />
+          </div>
+    
+          <div class="form-group">
+            <label for="end-node">End Node:</label>
+            <input type="text" id="end-mnode" placeholder="Enter End Node Id" />
+          </div>
+        </fieldset>
+        <div class="button-container">
+          <button class="button" id="find-min-path" onclick="findMinimumPath();">Find Minimum Path</button>
+        </div>
+      </form>
+    </div>
+
+    <div id="cpath-popUp" class="popup">
+      <span id="operation"">Critical Path</span>
+      <form id="critical-path-form">
+        <fieldset>
+          <legend>Find Critical Path</legend>
+          <div class="form-group">
+            <label for="start-node">Start Node:</label>
+            <input type="text" id="start-cnode" placeholder="Enter Start Node Id" />
+          </div>
+    
+          <div class="form-group">
+            <label for="end-node">End Node:</label>
+            <input type="text" id="end-cnode" placeholder="Enter End Node Id" />
+          </div>
+        </fieldset>
+        <div class="button-container">
+          <button class="button" id="find-critical-path" onclick="findCriticalPath();">Find Critical Path</button>
+        </div>
+      </form>
+    </div>
+    
   </main>
   <section>
     <div class="info-section" id="graphInfo">
@@ -129,7 +174,7 @@
     </div> 
     </section> 
     <section>
-    <div class="info-section" id="matrixs">
+    <div class="info-section" id="matrixes">
       <h2>Adjacency Matrix</h2>
       <pre id="adjacency-matrix"></pre>
       <h2>Incidence Matrix</h2>

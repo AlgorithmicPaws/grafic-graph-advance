@@ -50,7 +50,6 @@ form{
 }
 pre {
   display: flex;
-  /* Center the container horizontally */
   height: 100%; /* Make the container fill its parent's height */
   margin: 0; /* Remove any default margin */
 }
@@ -87,6 +86,7 @@ main{
     border-width: 0px;
     font-weight:500;
     margin-bottom: .5rem;
+    margin-top: .5rem;
 }       
 .button:hover{
     background-color: #ffff;
@@ -172,7 +172,18 @@ main{
   margin: auto; /* Center horizontally */
   justify-content: center;
   align-items: center;  
+}
 
+.popup{
+  position: absolute;
+  right: 1%  ; /* Position it on the left side */
+  top: 55%; /* Adjust the vertical position as needed */
+  transform: translateY(-50%); /* Center it vertically */
+  color: #5fa7fa; /* Your desired color here */
+  background-color: rgba(33, 29, 53, .8);
+  box-shadow: 0 0 3rem 0 rgba(126,40,250, .5);
+  border-radius: 8px; 
+  padding: 10px;
 }
 #mynetwork {
     width: 70rem;
@@ -189,14 +200,16 @@ main{
 #edit-popUp {
     display: none;  
     position: absolute;
-    right: 1%  ; /* Position it on the left side */
-    top: 55%; /* Adjust the vertical position as needed */
-    transform: translateY(-50%); /* Center it vertically */
-    color: #5fa7fa; /* Your desired color here */
-    background-color: rgba(33, 29, 53, .8);
-    box-shadow: 0 0 3rem 0 rgba(126,40,250, .5);
-    border-radius: 8px; 
-    padding: 10px;
+    text-align: center;
+  } 
+#mpath-popUp {
+    display: none;  
+    position: absolute;
+    text-align: center;
+  } 
+#cpath-popUp {
+    display: none;  
+    position: absolute;
     text-align: center;
   } 
   #operation{
