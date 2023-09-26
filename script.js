@@ -1,5 +1,5 @@
 var nodes, edges, network;
-
+let adjacencyMatrix = [];
 function draw() {
   // create an array with nodes
   nodes = new vis.DataSet();
@@ -125,36 +125,42 @@ function removeEdge() {
   }
 }
 
-
-//Display Graph info
 function displayAdjacencyMatrix(nodes, edges) {
   const nodeCount = nodes.length;
-  const matrix = [];
+  adjacencyMatrix = []; // Assign the result to the global variable
 
   // Create an array of node IDs for easy reference
   const nodeIds = nodes.map((node) => node.id);
 
+  // Create the header row with node IDs
+  const headerRow = [''].concat(nodeIds); // Add an empty cell as the top-left corner
+  adjacencyMatrix.push(headerRow);
+
   for (let i = 0; i < nodeCount; i++) {
-    matrix[i] = [];
+    const row = [nodeIds[i]]; // The first cell in each row is the node ID
     for (let j = 0; j < nodeCount; j++) {
-      matrix[i][j] = 0;
+      row.push(0); // Initialize all other entries to 0
     }
+    adjacencyMatrix.push(row);
   }
 
   edges.forEach((edge) => {
     const fromIndex = nodeIds.indexOf(edge.from);
     const toIndex = nodeIds.indexOf(edge.to);
     if (fromIndex !== -1 && toIndex !== -1) {
-      matrix[fromIndex][toIndex] = 1;
-      // If your graph is undirected, you can also set matrix[toIndex][fromIndex] = 1;
+      // Instead of setting it to 1, set it to the weight of the edge
+      adjacencyMatrix[fromIndex + 1][toIndex + 1] = parseFloat(edge.label); // Add 1 to indices to account for header row and column
+      // If your graph is undirected, you can also set adjacencyMatrix[toIndex + 1][fromIndex + 1] = parseFloat(edge.label);
     }
   });
 
-  const matrixString = matrix.map((row) => row.join(' ')).join('\n');
+  const matrixString = adjacencyMatrix.map((row) => row.join('   ')).join('\n');
 
   const preElement = document.getElementById('adjacency-matrix');
   preElement.textContent = matrixString;
 }
+
+
 
 function displayIncidenceMatrix(nodes, edges) {
   const nodeCount = nodes.length;
@@ -185,7 +191,7 @@ function displayIncidenceMatrix(nodes, edges) {
     }
   });
 
-  const matrixString = matrix.map((row) => row.join(' ')).join('\n');
+  const matrixString = matrix.map((row) => row.join('  ')).join('\n');
 
   const preElement = document.getElementById('incidence-matrix');
   preElement.textContent = matrixString;
@@ -286,99 +292,73 @@ function handleFileUpload(event) {
     alert('Please select a file to upload.');
   }
 }
-
-
 function findMinimumPath() {
-  // Get the start and end node IDs from the input fields
+  // Get the start and end node IDs from user input
   const startNodeId = document.getElementById("start-mnode").value;
   const endNodeId = document.getElementById("end-mnode").value;
 
-  // Check if both start and end nodes exist
-  if (!nodes.get(startNodeId) || !nodes.get(endNodeId)) {
-    alert("Start or end node not found.");
+  // Find the indices of start and end nodes in the adjacency matrix
+  const startIndex = adjacencyMatrix.findIndex(row => row[0] === startNodeId);
+  const endIndex = adjacencyMatrix.findIndex(row => row[0] === endNodeId);
+
+  if (startIndex === -1 || endIndex === -1) {
+    alert("Start or end node not found in the adjacency matrix.");
     return;
   }
 
-  // Create a map to store the distance from the start node to each node
-  const distance = {};
-  // Create a map to store the previous node in the shortest path
-  const previous = {};
-  // Create a set to keep track of visited nodes
-  const visited = new Set();
+  // Initialize variables for Dijkstra's algorithm
+  const numNodes = adjacencyMatrix.length;
+  const visited = Array(numNodes).fill(false);
+  const distances = Array(numNodes).fill(Infinity);
+  const previous = Array(numNodes).fill(null);
 
-  // Initialize distances and previous nodes
-  nodes.forEach((node) => {
-    distance[node.id] = Infinity;
-    previous[node.id] = null;
-  });
+  distances[startIndex] = 0;
 
-  distance[startNodeId] = 0;
+  // Dijkstra's algorithm
+  for (let i = 0; i < numNodes - 1; i++) {
+    const minDistanceNodeIndex = findMinDistanceNode(distances, visited);
+    visited[minDistanceNodeIndex] = true;
 
-  while (visited.size < nodes.length) {
-    // Find the node with the shortest distance that has not been visited yet
-    let minNodeId = null;
-    nodes.forEach((node) => {
-      if (!visited.has(node.id) && (minNodeId === null || distance[node.id] < distance[minNodeId])) {
-        minNodeId = node.id;
+    for (let j = 0; j < numNodes; j++) {
+      if (!visited[j] && adjacencyMatrix[minDistanceNodeIndex][j] !== 0) {
+        const potentialDistance = distances[minDistanceNodeIndex] + adjacencyMatrix[minDistanceNodeIndex][j];
+        if (potentialDistance < distances[j]) {
+          distances[j] = potentialDistance;
+          previous[j] = minDistanceNodeIndex;
+        }
       }
-    });
-
-    if (minNodeId === null || distance[minNodeId] === Infinity) {
-      // No reachable nodes left
-      break;
     }
-
-    visited.add(minNodeId);
-
-    // Update the distances and previous nodes for neighboring nodes
-    const neighbors = network.getConnectedNodes(minNodeId);
-    neighbors.forEach((neighborId) => {
-      const edgeId = network.getEdges(minNodeId, neighborId)[0]; // Assuming there is only one edge between nodes
-      const edge = edges.get(edgeId);
-      const edgeWeight = parseFloat(edge.label); // Convert the edge label to a number
-
-      if (edgeWeight + distance[minNodeId] < distance[neighborId]) {
-        distance[neighborId] = edgeWeight + distance[minNodeId];
-        previous[neighborId] = minNodeId;
-      }
-    });
   }
 
   // Reconstruct the minimum path
   const path = [];
-  let currentNode = endNodeId;
-  while (currentNode !== startNodeId) {
-    path.unshift(currentNode);
-    currentNode = previous[currentNode];
+  let currentNodeIndex = endIndex;
+  while (currentNodeIndex !== null) {
+    path.unshift(adjacencyMatrix[currentNodeIndex][0]);
+    currentNodeIndex = previous[currentNodeIndex];
   }
-  path.unshift(startNodeId);
+  console.log(path)
+  // Display the minimum path result
+  const resultElement = document.getElementById("minimum-path-result");
+  if (path.length === 0) {
+    resultElement.textContent = "No path found.";
+  } else {
+    resultElement.textContent = "Minimum Path: " + path.join(" -> ");
+  }
+}
 
-  // Highlight the minimum path in the visualization
-  nodes.forEach((node) => {
-    const nodeId = node.id;
-    if (path.includes(nodeId)) {
-      // Highlight nodes in the path
-      nodes.update({ id: nodeId, color: { background: "yellow" } });
-    } else {
-      // Reset color for other nodes
-      nodes.update({ id: nodeId, color: { background: null } });
+function findMinDistanceNode(distances, visited) {
+  let minDistance = Infinity;
+  let minDistanceIndex = -1;
+
+  for (let i = 0; i < distances.length; i++) {
+    if (!visited[i] && distances[i] < minDistance) {
+      minDistance = distances[i];
+      minDistanceIndex = i;
     }
-  });
+  }
 
-  edges.forEach((edge) => {
-    const edgeId = edge.id;
-    if (path.includes(edge.from) && path.includes(edge.to)) {
-      // Highlight edges in the path
-      edges.update({ id: edgeId, color: { color: "green" } });
-    } else {
-      // Reset color for other edges
-      edges.update({ id: edgeId, color: { color: "#d6116d" } });
-    }
-  });
-
-  // Display the minimum path in a text element
-  const pathText = path.join(" -> ");
-  document.getElementById("minimum-path-result").textContent = `Minimum Path: ${pathText}`;
+  return minDistanceIndex;
 }
 
 
