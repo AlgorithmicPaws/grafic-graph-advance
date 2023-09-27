@@ -147,10 +147,10 @@ function displayAdjacencyMatrix(nodes, edges) {
   edges.forEach((edge) => {
     const fromIndex = nodeIds.indexOf(edge.from);
     const toIndex = nodeIds.indexOf(edge.to);
-
+    console.log(edge.arrows)
     if (fromIndex !== -1 && toIndex !== -1) {
       // Check if the edge is directional or not based on the "arrows" attribute
-      if (edge.arrows === null) {
+      if (edge.arrows !== "to") {
         // If it's not directional, consider it bidirectional by setting both entries
         adjacencyMatrix[fromIndex + 1][toIndex + 1] = parseFloat(edge.label);
         adjacencyMatrix[toIndex + 1][fromIndex + 1] = parseFloat(edge.label);
@@ -191,7 +191,7 @@ function displayIncidenceMatrix(nodes, edges) {
     const toIndex = nodeIds.indexOf(edge.to);
 
     // Check if the edge is directed or not
-    if (edge.arrows !== null) {
+    if (edge.arrows === "to") {
       matrix[fromIndex][j] = -1;
       matrix[toIndex][j] = 1;
     } else {
@@ -344,11 +344,12 @@ function findMinimumPath() {
   let currentNodeIndex = endIndex;
   while (currentNodeIndex !== null) {
     const currentNodeId = adjacencyMatrix[currentNodeIndex][0];
+    const currentDistance = distances[currentNodeIndex]; // Store the current distance
     path.unshift(currentNodeId); // Add current node to the path
     currentNodeIndex = previous[currentNodeIndex];
-
-    // Debugging: Print current node and distance
-    console.log(`Current Node: ${currentNodeId}, Distance: ${distances[currentNodeIndex]}`);
+  
+    // Debugging: Print current node and its stored distance
+    console.log(`Current Node: ${currentNodeId}, Distance: ${currentDistance}`);
   }
   console.log(path)
   // Display the minimum path result
