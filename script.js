@@ -127,13 +127,13 @@ function removeEdge() {
 
 function displayAdjacencyMatrix(nodes, edges) {
   const nodeCount = nodes.length;
-  adjacencyMatrix = []; // Assign the result to the global variable
+  adjacencyMatrix = []; // Initialize the adjacency matrix as an empty array
 
   // Create an array of node IDs for easy reference
   const nodeIds = nodes.map((node) => node.id);
 
-  // Create the header row with node IDs
-  const headerRow = [''].concat(nodeIds); // Add an empty cell as the top-left corner
+  // Create the header row with node IDs, including an empty cell at the top-left corner
+  const headerRow = [''].concat(nodeIds);
   adjacencyMatrix.push(headerRow);
 
   for (let i = 0; i < nodeCount; i++) {
@@ -147,15 +147,24 @@ function displayAdjacencyMatrix(nodes, edges) {
   edges.forEach((edge) => {
     const fromIndex = nodeIds.indexOf(edge.from);
     const toIndex = nodeIds.indexOf(edge.to);
+
     if (fromIndex !== -1 && toIndex !== -1) {
-      // Instead of setting it to 1, set it to the weight of the edge
-      adjacencyMatrix[fromIndex + 1][toIndex + 1] = parseFloat(edge.label); // Add 1 to indices to account for header row and column
-      // If your graph is undirected, you can also set adjacencyMatrix[toIndex + 1][fromIndex + 1] = parseFloat(edge.label);
+      // Check if the edge is directional or not based on the "arrows" attribute
+      if (edge.arrows === null) {
+        // If it's not directional, consider it bidirectional by setting both entries
+        adjacencyMatrix[fromIndex + 1][toIndex + 1] = parseFloat(edge.label);
+        adjacencyMatrix[toIndex + 1][fromIndex + 1] = parseFloat(edge.label);
+      } else {
+        // If it's directional, set the entry only in the "from" to "to" direction
+        adjacencyMatrix[fromIndex + 1][toIndex + 1] = parseFloat(edge.label);
+      }
     }
   });
 
+  // Convert the adjacency matrix to a string and format it for display
   const matrixString = adjacencyMatrix.map((row) => row.join('   ')).join('\n');
 
+  // Update the content of the HTML element with the adjacency matrix
   const preElement = document.getElementById('adjacency-matrix');
   preElement.textContent = matrixString;
 }
@@ -219,9 +228,9 @@ function exportToDOT() {
   // Add edges to the DOT string
   currentEdges.forEach(function (edge) {
     if (edge.arrows === null) {
-      dotString += '  "' + edge.from + '" -- "' + edge.to  + '" [label="' + edge.label + '"] ;\n';
+      dotString += '  "' + edge.from + '" -- "' + edge.to  + '" [label="' + edge.label + '", arrows="' + edge.arrows + '"] ;\n';
     } else {
-      dotString += '  "' + edge.from + '" -> "' + edge.to  + '" [label="' + edge.label + '"] ;\n';
+      dotString += '  "' + edge.from + '" -> "' + edge.to  + '" [label="' + edge.label + '", arrows="' + edge.arrows + '"] ;\n';
     }
   });
 
@@ -334,8 +343,12 @@ function findMinimumPath() {
   const path = [];
   let currentNodeIndex = endIndex;
   while (currentNodeIndex !== null) {
-    path.unshift(adjacencyMatrix[currentNodeIndex][0]);
+    const currentNodeId = adjacencyMatrix[currentNodeIndex][0];
+    path.unshift(currentNodeId); // Add current node to the path
     currentNodeIndex = previous[currentNodeIndex];
+
+    // Debugging: Print current node and distance
+    console.log(`Current Node: ${currentNodeId}, Distance: ${distances[currentNodeIndex]}`);
   }
   console.log(path)
   // Display the minimum path result
