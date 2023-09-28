@@ -319,9 +319,8 @@ function findMinimumPath() {
   const numNodes = adjacencyMatrix.length;
   const visited = Array(numNodes).fill(false);
   const distances = Array(numNodes).fill(Infinity);
-  const previous = Array(numNodes).fill(null);
-
   distances[startIndex] = 0;
+  const previous = Array(numNodes).fill(null);
 
   // Dijkstra's algorithm
   for (let i = 0; i < numNodes - 1; i++) {
@@ -344,12 +343,14 @@ function findMinimumPath() {
   let currentNodeIndex = endIndex;
   while (currentNodeIndex !== null) {
     const currentNodeId = adjacencyMatrix[currentNodeIndex][0];
-    const currentDistance = distances[currentNodeIndex]; // Store the current distance
-    path.unshift(currentNodeId); // Add current node to the path
+        // Add current node to the path
+    path.unshift(currentNodeId);
+
+        // Update the color of the current node in the network visualization
+    network.body.data.nodes.update([{ id: currentNodeId, color: { background: '#5e03fc', border: '#2302c9' } }]);
+        
     currentNodeIndex = previous[currentNodeIndex];
-  
-    // Debugging: Print current node and its stored distance
-    console.log(`Current Node: ${currentNodeId}, Distance: ${currentDistance}`);
+
   }
   console.log(path)
   // Display the minimum path result
@@ -360,6 +361,7 @@ function findMinimumPath() {
     resultElement.textContent = "Minimum Path: " + path.join(" -> ");
   }
 }
+
 
 function findMinDistanceNode(distances, visited) {
   let minDistance = Infinity;
@@ -374,6 +376,8 @@ function findMinDistanceNode(distances, visited) {
 
   return minDistanceIndex;
 }
+
+
 
 
 
@@ -401,6 +405,9 @@ function displayEdit() {
   var cPathPopup  = document.getElementById("cpath-popUp");
   if (popUpDisplay.style.display === "none" || popUpDisplay.style.display === "") {
     minPathPopup.style.display = "none"
+    const allNodes = nodes.get();
+    const resetNodeColors = allNodes.map((node) => ({ id: node.id, color: { background: '#FE7BE5', border: '#d6116d' } }));
+    network.body.data.nodes.update(resetNodeColors);
     cPathPopup.style.display = "none"
     popUpDisplay.style.display = "block";
   } else {
@@ -416,6 +423,9 @@ function showMinPathPopup() {
     popUpDisplay.style.display = "none";
     minPathPopup.style.display = "block";
   } else {
+    const allNodes = nodes.get();
+    const resetNodeColors = allNodes.map((node) => ({ id: node.id, color: { background: '#FE7BE5', border: '#d6116d' } }));
+    network.body.data.nodes.update(resetNodeColors);
     minPathPopup.style.display = "none";
   }
 }
@@ -425,6 +435,9 @@ function showCriticalPathPopup() {
   var cPathPopup  = document.getElementById("cpath-popUp");
   if (cPathPopup.style.display === "none" || cPathPopup.style.display === "") {
     minPathPopup.style.display = "none"
+    const allNodes = nodes.get();
+    const resetNodeColors = allNodes.map((node) => ({ id: node.id, color: { background: '#FE7BE5', border: '#d6116d' } }));
+    network.body.data.nodes.update(resetNodeColors);
     popUpDisplay.style.display = "none";
     cPathPopup.style.display = "block";
   } else {
