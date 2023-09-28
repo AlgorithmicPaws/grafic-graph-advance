@@ -147,15 +147,12 @@ function displayAdjacencyMatrix(nodes, edges) {
   edges.forEach((edge) => {
     const fromIndex = nodeIds.indexOf(edge.from);
     const toIndex = nodeIds.indexOf(edge.to);
-    console.log(edge.arrows)
     if (fromIndex !== -1 && toIndex !== -1) {
       // Check if the edge is directional or not based on the "arrows" attribute
       if (edge.arrows !== "to") {
-        // If it's not directional, consider it bidirectional by setting both entries
         adjacencyMatrix[fromIndex + 1][toIndex + 1] = parseFloat(edge.label);
         adjacencyMatrix[toIndex + 1][fromIndex + 1] = parseFloat(edge.label);
       } else {
-        // If it's directional, set the entry only in the "from" to "to" direction
         adjacencyMatrix[fromIndex + 1][toIndex + 1] = parseFloat(edge.label);
       }
     }
@@ -256,6 +253,8 @@ function exportToDOT() {
   // Clean up by removing the download link and revoking the URL
   document.body.removeChild(a);
   window.URL.revokeObjectURL(url);
+
+
 }function uploadAndImportDOT() {
   // Trigger the file input when the "Import Graph" anchor tag is clicked
   document.getElementById("fileInput").click();
@@ -263,9 +262,7 @@ function exportToDOT() {
 
 // Add an event listener to the file input to handle file selection
 
-function uploadAndImportDOT() {
-  document.getElementById("fileInput").click();
-}
+
 document.getElementById("fileInput").addEventListener("change", handleFileUpload);
 
 // Function to handle the selected file and import the graph
@@ -309,7 +306,9 @@ function findMinimumPath() {
   // Find the indices of start and end nodes in the adjacency matrix
   const startIndex = adjacencyMatrix.findIndex(row => row[0] === startNodeId);
   const endIndex = adjacencyMatrix.findIndex(row => row[0] === endNodeId);
-
+  const allNodes = nodes.get();
+  const resetNodeColors = allNodes.map((node) => ({ id: node.id, color: { background: '#FE7BE5', border: '#d6116d' } }));
+  network.body.data.nodes.update(resetNodeColors);
   if (startIndex === -1 || endIndex === -1) {
     alert("Start or end node not found in the adjacency matrix.");
     return;
@@ -381,7 +380,10 @@ function findCriticalPath() {
   // Get the start and end node IDs from user input
   const startNodeId = document.getElementById("start-cnode").value;
   const endNodeId = document.getElementById("end-cnode").value;
-
+  
+  const allNodes = nodes.get();
+  const resetNodeColors = allNodes.map((node) => ({ id: node.id, color: { background: '#FE7BE5', border: '#d6116d' } }));
+  network.body.data.nodes.update(resetNodeColors);
   // Find the indices of start and end nodes in the adjacency matrix
   const startIndex = adjacencyMatrix.findIndex(row => row[0] === startNodeId);
   const endIndex = adjacencyMatrix.findIndex(row => row[0] === endNodeId);
@@ -429,13 +431,14 @@ function findCriticalPath() {
       break;
     }
   }
-
+  
   // Reconstruct the critical path (longest path)
   const criticalPath = [];
   let currentNodeIndex = endIndex;
   while (currentNodeIndex !== null) {
     const currentNodeId = adjacencyMatrix[currentNodeIndex][0];
     if (currentNodeId) {
+  
       criticalPath.unshift(currentNodeId); // Add current node to the critical path
       network.body.data.nodes.update([{ id: currentNodeId, color: { background: '#5e03fc', border: '#2302c9' } }]);
     }
@@ -491,6 +494,8 @@ function displayEdit() {
   var popUpDisplay = document.getElementById("edit-popUp");
   var minPathPopup  = document.getElementById("mpath-popUp");
   var cPathPopup  = document.getElementById("cpath-popUp");
+  var resultc  = document.getElementById("critical-path-result");
+  var resultm  = document.getElementById("minimum-path-result");
   if (popUpDisplay.style.display === "none" || popUpDisplay.style.display === "") {
     minPathPopup.style.display = "none"
     const allNodes = nodes.get();
@@ -498,6 +503,8 @@ function displayEdit() {
     network.body.data.nodes.update(resetNodeColors);
     cPathPopup.style.display = "none"
     popUpDisplay.style.display = "block";
+    resultm.style.display = "none";
+    resultc.style.display = "none";
   } else {
     popUpDisplay.style.display = "none";
   }
@@ -506,30 +513,48 @@ function showMinPathPopup() {
   var popUpDisplay = document.getElementById("edit-popUp");
   var minPathPopup  = document.getElementById("mpath-popUp");
   var cPathPopup  = document.getElementById("cpath-popUp");
+  var resultc  = document.getElementById("critical-path-result");
+  var resultm  = document.getElementById("minimum-path-result");
   if (minPathPopup.style.display === "none" || minPathPopup.style.display === "") {
     cPathPopup.style.display = "none"
     popUpDisplay.style.display = "none";
     minPathPopup.style.display = "block";
+    resultm.style.display = "block";
+    resultc.style.display = "none";
+    const allNodes = nodes.get();
+    const resetNodeColors = allNodes.map((node) => ({ id: node.id, color: { background: '#FE7BE5', border: '#d6116d' } }));
+    network.body.data.nodes.update(resetNodeColors);
   } else {
     const allNodes = nodes.get();
     const resetNodeColors = allNodes.map((node) => ({ id: node.id, color: { background: '#FE7BE5', border: '#d6116d' } }));
     network.body.data.nodes.update(resetNodeColors);
     minPathPopup.style.display = "none";
+    resultm.style.display = "none";
+
   }
 }
 function showCriticalPathPopup() {
   var popUpDisplay = document.getElementById("edit-popUp");
   var minPathPopup  = document.getElementById("mpath-popUp");
   var cPathPopup  = document.getElementById("cpath-popUp");
+  var resultc  = document.getElementById("critical-path-result");
+  var resultm  = document.getElementById("minimum-path-result");
   if (cPathPopup.style.display === "none" || cPathPopup.style.display === "") {
     minPathPopup.style.display = "none"
+    resultc.style.display = "block"
+    cPathPopup.style.display = "block";
+    resultm.style.display = "none";
     const allNodes = nodes.get();
     const resetNodeColors = allNodes.map((node) => ({ id: node.id, color: { background: '#FE7BE5', border: '#d6116d' } }));
     network.body.data.nodes.update(resetNodeColors);
     popUpDisplay.style.display = "none";
     cPathPopup.style.display = "block";
   } else {
+    resultc.style.display = "none"
     cPathPopup.style.display = "none";
+    const allNodes = nodes.get();
+    const resetNodeColors = allNodes.map((node) => ({ id: node.id, color: { background: '#FE7BE5', border: '#d6116d' } }));
+    network.body.data.nodes.update(resetNodeColors);
   }
 }
 

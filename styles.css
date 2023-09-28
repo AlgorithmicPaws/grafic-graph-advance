@@ -173,6 +173,19 @@ main{
   justify-content: center;
   align-items: center;  
 }
+.path{
+  position: absolute;
+  display:none;
+  right: 5%  ; /* Position it on the left side */
+  top: 80%; /* Adjust the vertical position as needed */
+  transform: translateY(-50%); /* Center it vertically */
+  color: #5fa7fa; /* Your desired color here */
+  background-color: rgba(33, 29, 53, .8);
+  box-shadow: 0 0 1rem 0 rgba(126,40,250, .5);
+  border-radius: 8px; 
+  padding: 10px;
+
+}
 
 .popup{
   position: absolute;
