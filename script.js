@@ -377,7 +377,95 @@ function findMinDistanceNode(distances, visited) {
   return minDistanceIndex;
 }
 
+function findCriticalPath() {
+  // Get the start and end node IDs from user input
+  const startNodeId = document.getElementById("start-cnode").value;
+  const endNodeId = document.getElementById("end-cnode").value;
 
+  // Find the indices of start and end nodes in the adjacency matrix
+  const startIndex = adjacencyMatrix.findIndex(row => row[0] === startNodeId);
+  const endIndex = adjacencyMatrix.findIndex(row => row[0] === endNodeId);
+
+  if (startIndex === -1 || endIndex === -1) {
+    alert("Start or end node not found in the adjacency matrix.");
+    return;
+  }
+
+  // Initialize variables for critical path
+  const numNodes = adjacencyMatrix.length;
+  const visited = Array(numNodes).fill(false);
+  const distances = Array(numNodes).fill(-Infinity); // Initialize distances to negative infinity
+  distances[startIndex] = 0;
+  const previous = Array(numNodes).fill(null);
+
+  // Critical Path Algorithm (Longest Path)
+  for (let i = 0; i < numNodes - 1; i++) {
+    const maxDistanceNodeIndex = findMaxDistanceNode(distances, visited);
+    visited[maxDistanceNodeIndex] = true;
+
+    let currentNodeIndex = maxDistanceNodeIndex; // Initialize currentNodeIndex
+
+    for (let j = 0; j < numNodes; j++) {
+      if (!visited[j] && adjacencyMatrix[currentNodeIndex][j] !== 0) {
+        const potentialDistance = distances[currentNodeIndex] + adjacencyMatrix[currentNodeIndex][j];
+        if (potentialDistance > distances[j]) {
+          distances[j] = potentialDistance;
+          previous[j] = currentNodeIndex;
+        }
+      }
+    }
+
+    // Check if there are unvisited connected nodes
+    let foundUnvisited = false;
+    for (let j = 0; j < numNodes; j++) {
+      if (!visited[j] && adjacencyMatrix[currentNodeIndex][j] !== 0) {
+        foundUnvisited = true;
+        break;
+      }
+    }
+
+    // If there are no unvisited connected nodes, break out of the loop
+    if (!foundUnvisited && currentNodeIndex === endIndex) {
+      break;
+    }
+  }
+
+  // Reconstruct the critical path (longest path)
+  const criticalPath = [];
+  let currentNodeIndex = endIndex;
+  while (currentNodeIndex !== null) {
+    const currentNodeId = adjacencyMatrix[currentNodeIndex][0];
+    if (currentNodeId) {
+      criticalPath.unshift(currentNodeId); // Add current node to the critical path
+      network.body.data.nodes.update([{ id: currentNodeId, color: { background: '#5e03fc', border: '#2302c9' } }]);
+    }
+    currentNodeIndex = previous[currentNodeIndex];
+  }
+
+  // Display the critical path result
+  const resultElement = document.getElementById("critical-path-result");
+  if (criticalPath.length === 0) {
+    resultElement.textContent = "No critical path found.";
+  } else {
+    resultElement.textContent = "Critical Path (Longest Path): " + criticalPath.join(" -> ");
+  }
+}
+
+
+
+function findMaxDistanceNode(distances, visited) {
+  let maxDistance = -Infinity;
+  let maxDistanceIndex = -1;
+
+  for (let i = 0; i < distances.length; i++) {
+    if (!visited[i] && distances[i] > maxDistance) {
+      maxDistance = distances[i];
+      maxDistanceIndex = i;
+    }
+  }
+
+  return maxDistanceIndex;
+}
 
 
 
